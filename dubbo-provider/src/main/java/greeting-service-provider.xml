@@ -24,11 +24,17 @@
 	<!-- 提供方应用信息，用于计算依赖关系 -->  
     <dubbo:application name="greeting-service-provider" />
     <!-- 使用zookeeper广播注册中心暴露服务地址 -->
-    <dubbo:registry protocol="zookeeper" address="10.1.1.228:2181,10.1.1.225:2181,10.1.1.223:2181" client="zkclient"/>
-
+    <dubbo:registry id="sh_service" protocol="zookeeper" address="10.1.1.228:2181" client="zkclient"/>
+    <dubbo:registry id ="bj_service" protocol="zookeeper" address="10.1.1.225:2181" client="zkclient" default="false"/>
+    <!--<dubbo:registry id="sh_service" protocol="zookeeper" address="10.1.99.236:2181" client="zkclient"/>
+    <dubbo:registry id ="bj_service" protocol="zookeeper" address="10.1.99.237:2181" client="zkclient" default="false"/>-->
+    <!--<dubbo:registry protocol="zookeeper" address="10.1.1.228:2181,10.1.1.225:2181,10.1.1.223:2181" client="zkclient"/>-->
     <bean id="greetingService" class="com.taomee.bigdata.tj.GreetingServiceImpl"/>
 
-    <dubbo:service protocol="dubbo" interface="com.taomee.bigdata.server.GreetingServer" ref="greetingService"/>
+    <dubbo:module name="Dubbo_Producer" owner="looper22"/>
+    <!--暴露远程服务配置,retries 表示设置重试次数，executes="10"控制单个服务并发调用次数-->
+
+    <dubbo:service protocol="dubbo" interface="com.taomee.bigdata.server.GreetingServer" ref="greetingService" retries="2"/>
 
 	
 </beans>

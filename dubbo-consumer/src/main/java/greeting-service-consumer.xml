@@ -20,18 +20,21 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
 	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 	
-	<!-- 用于测试开始，提交时需注释掉 -->
-	<!-- 提供方应用信息，用于计算依赖关系 -->  
+
     <dubbo:application name="greeting-service-consumer" />
-    <!-- 使用zookeeper广播注册中心暴露服务地址 -->
     <dubbo:registry protocol="zookeeper" address="10.1.1.228:2181,10.1.1.225:2181,10.1.1.223:2181" client="zkclient"/>
+    <!-- 使用zookeeper暴露consumer地址 -->
+   <!-- <dubbo:registry protocol="zookeeper" address="10.1.1.228:2181" client="zkclient"/>-->
+    <!--<dubbo:registry protocol="zookeeper" address="10.1.1.228:2181,10.1.1.225:2181,10.1.1.223:2181" client="zkclient"/>-->
+    <!--<dubbo:registry id="sh_service" protocol="zookeeper" address="10.1.1.228:2181" client="zkclient"/>-->
 
-    <!--<bean id="greetingService" class="com.taomee.bigdata.tj.GreetingServiceImpl"/>
+    <!--配置多注册中心-->
+    <!--<dubbo:registry id ="sh_service" protocol="zookeeper" address="10.1.1.225:2181" client="zkclient"/>
+    <dubbo:registry id ="bj_service" protocol="zookeeper" address="10.1.1.225:2181" client="zkclient" default="false"/>-->
 
-    <dubbo:service protocol="dubbo" interface="com.taomee.bigdata.server.GreetingServer" ref="greetingService"/>-->
+    <!--向多注册中心注册-->
+    <!--<dubbo:reference id="greetingServer" interface="com.taomee.bigdata.server.GreetingServer" retries="3" check="true" registry="bj_service"/>-->
 
-    <!--生成远端代理-->
-    <dubbo:reference id="greetingServer" interface="com.taomee.bigdata.server.GreetingServer"/>
-
-	
+    <!--引用远程服务，cache设置其加的缓存策略-->
+    <dubbo:reference id="greetingServer" interface="com.taomee.bigdata.server.GreetingServer" retries="3" check="true" cache="lru"/>
 </beans>
